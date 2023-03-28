@@ -8,7 +8,6 @@
 #include <ostream>
 #include "CurrentTime.h"
 
-
 //struct Date {
 //    CurrentTime currentTime;
 //
@@ -37,8 +36,8 @@ class Record {
 public:
     Record();
     Record(std::string& artist, std::string& album, std::string& genre, int releaseYear, int rating);
-
-    Record* next;
+    Record(std::string& artist, std::string& album, std::string& genre, int releaseYear, int rating,
+           Date dateCreated, Date dateLastEdit);
 
     Date dateCreated;
     Date dateLastEdit;
@@ -66,9 +65,21 @@ private:
     int rating;
 
     friend std::ostream& operator<<(std::ostream& stream, const Record* record);
+    friend std::ostream& operator<<(std::ostream& stream, const Record& record);
 
 //    friend std::istream& operator>>(std::istream& stream, const Record& record);
 };
+
+class RecordNode : public Record {
+public:
+    using Record::Record;
+    RecordNode() = default;
+    RecordNode(std::string &artist, std::string &album, std::string &genre, int releaseYear,
+               int rating);
+
+    Record* next;
+};
+
 
 
 #endif //UNTITLED3_RECORD_H
