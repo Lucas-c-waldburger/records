@@ -12,17 +12,19 @@ Record::Record() {
     dateLastEdit = dateCreated;
 }
 
-Record::Record(std::string& artist, std::string& album, std::string& genre, int releaseYear, int rating) : Record() {
+Record::Record(std::string& artist, std::string& album, std::string& genre, int releaseYear, int condition, int rating) : Record() {
     this->artist = artist;
     this->album = album;
     this->genre = genre;
     this->releaseYear = releaseYear;
+    this->condition = condition;
     this->rating = rating;
 }
 
-Record::Record(std::string& artist, std::string& album, std::string& genre, int releaseYear, int rating,
-               Date dateCreated, Date dateLastEdit) : artist{artist}, album{album}, genre{genre},
-               releaseYear{releaseYear}, rating{rating}, dateCreated{dateCreated}, dateLastEdit{dateLastEdit} {};
+Record::Record(std::string& artist, std::string& album, std::string& genre, int releaseYear, int condition, int rating,
+               int ID, Date dateCreated, Date dateLastEdit) : artist{artist}, album{album}, genre{genre},
+               releaseYear{releaseYear}, condition{condition}, rating{rating}, ID{ID}, dateCreated{dateCreated},
+               dateLastEdit{dateLastEdit} {}
 
 std::string Record::getArtist () const {
     return artist;
@@ -40,6 +42,14 @@ void Record::setAlbum(std::string& album) {
     this->album = album;
 }
 
+std::string Record::getGenre() const {
+    return genre;
+}
+
+void Record::setGenre(std::string& genre) {
+    this->genre = genre;
+}
+
 int Record::getReleaseYear() const {
     return releaseYear;
 }
@@ -48,12 +58,12 @@ void Record::setReleaseYear(int releaseYear) {
     this->releaseYear = releaseYear;
 }
 
-std::string Record::getGenre() const {
-    return genre;
+int Record::getCondition() const {
+    return condition;
 }
 
-void Record::setGenre(std::string& genre) {
-    this->genre = genre;
+void Record::setCondition(int condition) {
+    this->condition = condition;
 }
 
 int Record::getRating() const {
@@ -64,35 +74,62 @@ void Record::setRating(int rating) {
     this->rating = rating;
 }
 
+int Record::getID() const {
+    return ID;
+}
 
+void Record::setID(int id) {
+    this->ID = id;
+}
 
 std::ostream& operator<<(std::ostream& stream, const Record* record) {
-    stream << "Artist: " << record->getArtist() << '\n'
+    stream << "---------------------------\n"
+           << "Artist: " << record->getArtist() << '\n'
            << "Album: " << record->getAlbum() << '\n'
            << "Release Year: " << record->getReleaseYear() << '\n'
            << "Genre: " << record->getGenre() << '\n'
+           << "Condition: " << record->getCondition() << '\n'
            << "Rating: " << record->getRating() << '\n'
+           << "Album ID: " << record->getID() << '\n'
            << "Date Created: " << &record->dateCreated << '\n'
-           << "Date of Last Edit: " << &record->dateLastEdit << std::endl;
+           << "Date of Last Edit: " << &record->dateLastEdit << '\n'
+           << "---------------------------\n" << std::endl;
 
     return stream;
 }
 
 std::ostream& operator<<(std::ostream& stream, const Record& record) {
-    stream << "Artist: " << record.getArtist() << '\n'
+    stream << "---------------------------\n"
+           << "Artist: " << record.getArtist() << '\n'
            << "Album: " << record.getAlbum() << '\n'
            << "Release Year: " << record.getReleaseYear() << '\n'
            << "Genre: " << record.getGenre() << '\n'
+           << "Condition: " << record.getCondition() << '\n'
            << "Rating: " << record.getRating() << '\n'
-           << "Date Created: " << &record.dateCreated << '\n'
-           << "Date of Last Edit: " << &record.dateLastEdit << std::endl;
+           << "Album ID: " << record.getID() << '\n'
+           << "Date of Entry: " << &record.dateCreated << '\n'
+           << "Date of Last Edit: " << &record.dateLastEdit << '\n'
+           << "---------------------------\n" << std::endl;
+
 
     return stream;
 }
 
+std::unique_ptr<int[]> Date::getDates(std::string dateString) {
+    std::string monthToken = dateString.substr(0, dateString.find('/'));
+    dateString.erase(0, dateString.find('/') + 1);
+    std::string dayToken = dateString.substr(0, dateString.find('/'));
+    dateString.erase(0, dateString.find('/') + 1);
+    std::string yearToken = dateString.substr(0);
 
+    std::unique_ptr<int[]> dates(new int[3]);
+    dates[0] = std::stoi(monthToken);
+    dates[1] = std::stoi(dayToken);
+    dates[2] = std::stoi(yearToken);
 
+    return dates;
 
+}
 
 std::ostream &operator<<(std::ostream& stream, const Date* date) {
     stream << date->month << '/' << date->day << '/' << date->year;
@@ -133,6 +170,6 @@ bool Date::operator>(const Date* date) const {
     return false;
 }
 
-RecordNode::RecordNode(std::string &artist, std::string &album, std::string &genre, int releaseYear,
-int rating) : Record(artist, album, genre, releaseYear, rating) {};
+//RecordNode::RecordNode(std::string &artist, std::string &album, std::string &genre, int releaseYear,
+//int rating) : Record(artist, album, genre, releaseYear, rating) {};
 
